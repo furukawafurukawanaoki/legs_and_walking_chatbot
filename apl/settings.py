@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +31,7 @@ BASE_URL = os.getenv("BASE_URL")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = [".vercel.app",".now.sh","127.0.0.1"]
+ALLOWED_HOSTS = [".onrender.com",".now.sh","127.0.0.1"]
 
 
 # Application definition
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,6 +81,9 @@ WSGI_APPLICATION = 'apl.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+default_dburl = os.getenv("DATABASE_URL")
+DATAbASES = {"default":dj_database_url.config(default=default_dburl)}
 
 DATABASES = {
     'default': {
@@ -132,3 +137,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+SUPERUSER_NAME = os.getenv("SUPERUSER_NAME")
+SUPERUSER_EMAIL = os.getenv("SUPERUSER_EMAIL")
+SUPERUSER_PASSWORD = os.getenv("SUPERUSER_PASSWORD")
