@@ -1,0 +1,21 @@
+{
+    "regions": [
+        "hnd1"
+    ],
+    "builds": [
+        {
+            "src": "config/wsgi.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "15mb",
+                "runtime": "python"
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "config/wsgi.py"
+        }
+    ]
+}

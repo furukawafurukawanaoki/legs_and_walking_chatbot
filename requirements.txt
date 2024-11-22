@@ -1,0 +1,10 @@
+django
+python-dotenv
+requests
+django-widget-tweaks
+pandas
+whitenoise
+gunicorn
+IPython
+markdown
+psycopg2-binary
