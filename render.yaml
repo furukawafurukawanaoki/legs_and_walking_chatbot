@@ -14,7 +14,7 @@ services:
     branch: main
     healthCheckPath: /
     buildCommand: "./build.sh"
-    startCommand: "gunicorn aol.wsgi:application"
+    startCommand: "gunicorn apl.wsgi:application"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
