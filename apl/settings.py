@@ -33,7 +33,7 @@ BASE_URL = os.getenv("BASE_URL")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = ["legs-and-walking-chatbot.onrender.com","127.0.0.1"]
+ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS"),"127.0.0.1"]
 
 
 # Application definition
@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'apl.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 default_dburl = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
-DATABASES = {'default': dj_database_url.config(default=default_dburl)}
+DATABASES = {'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 
 
 # Password validation
