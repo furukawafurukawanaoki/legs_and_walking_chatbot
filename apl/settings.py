@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
+from decouple import config
+from dj_database_url import parse as dburl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,7 +86,7 @@ WSGI_APPLICATION = 'apl.wsgi.application'
 
 default_dburl = os.getenv("DATABASE_URL")
 DATABASES = {
-    "default":dj_database_url.config(default=default_dburl)
+    "default":config("DATABASE_URL",default=default_dburl,cast=dburl)
 }
 
 
