@@ -21,7 +21,7 @@
             justify-content: center;
             align-items: flex-start; /* スクロール位置を上に */
             height: 100vh;
-            margin-top: 60px;  /* ナビゲーションバーの高さを考慮 */
+            margin-top: 10px;  /* ナビゲーションバーの高さを考慮 */
         }
 
         /* ナビゲーション部分 */
@@ -140,6 +140,7 @@
             border-top: 1px solid #ddd;
             padding: 10px;
             background-color: #f4f6f9;
+            position: relative;
         }
 
         .query input {
@@ -169,10 +170,23 @@
             cursor: pointer;
             font-weight: bold;
             transition: background-color 0.3s;
+            width: 140px;  /* ボタンの幅を固定 */
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
         .chat-input button:hover {
-            background-color: #0073e6;
+            background-color: #004385;
+        }
+
+        .loading {
+            background-color: #f4f6f9;
+            color: #888;
+            font-size: 16px;
+            padding: 10px 16px;
+            border-radius: 20px;
+            cursor: not-allowed;
         }
 
         /* スクロールバー */
@@ -186,7 +200,21 @@
         }
 
         .chat-box::-webkit-scrollbar-thumb:hover {
-            background-color: #b0b0b0;
+            background-color: #979797;
+        }
+        #loading {
+            display: none;  /* 初期状態では非表示 */
+            background-color: #f4f6f9;
+            color: #888;
+            font-size: 16px;
+            padding: 10px 16px;
+            border-radius: 20px;
+            width: 140px;  /* ボタンと同じ幅に合わせる */
+            text-align: center;
+            position: absolute;  /* 絶対配置 */
+            right: 0;  /* ボタンの右に配置 */
+            margin-right: 8px;  /* ボタンと少し隙間を空ける */
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -230,30 +258,52 @@
 
         <!-- Chat Input -->
         <div class="chat-input">
-            <form method="post" action="{% url 'app:query' %}">
+            <form method="post" action="{% url 'app:query' %}" id="chat-form">
                 {% csrf_token %}
                 <div class="query">
                     {% render_field form.query class="form-control" placeholder="質問を入力してください..." %}
                 </div>
-                <button type="submit">送信</button>
+                <button type="submit" id="submit-button">送信</button>
             </form>
         </div>
     </div>
 
-    <!-- Scroll to the bottom of the chat box and clear input -->
+    <!-- ローディングの表示 -->
+    <div id="loading">送信中...</div>
+
     <script>
         function scrollToBottom() {
             const chatBox = document.getElementById('chat-box');
             chatBox.scrollTop = chatBox.scrollHeight;
         }
+
         document.addEventListener("DOMContentLoaded", function() {
-            scrollToBottom();  // Load時にスクロール
+            scrollToBottom();  // ページロード時にスクロール
         });
-        document.querySelector("form").addEventListener("submit", function() {
+
+        document.getElementById('chat-form').addEventListener("submit", function(event) {
+            event.preventDefault();  // 通常のフォーム送信を無効にする
+
+            // ローディング中の表示
+            const submitButton = document.getElementById('submit-button');
+            const loadingMessage = document.getElementById('loading');
+            const queryInput = document.querySelector('input[name="query"]');
+            submitButton.disabled = true;
+            submitButton.textContent = '送信中...';
+            loadingMessage.style.display = 'block';  // ローディング表示を有効にする
+            
+            // 少し遅延を与えてスクロール
             setTimeout(() => {
-                scrollToBottom();  // メッセージ送信後にスクロール
-            }, 100);
-        document.querySelector('.form-control').value = '';  // フィールドの入力をクリア
+                this.submit();  // フォームを送信
+            }, 50);
+
+            // フォームをリセット
+            setTimeout(() => {
+                queryInput.value = '';  // 入力フィールドを空にする
+                loadingMessage.style.display = 'none';
+                submitButton.disabled = false;
+                submitButton.textContent = '送信';  // ボタンを元に戻す
+            }, 2000);
         });
     </script>
 </body>
